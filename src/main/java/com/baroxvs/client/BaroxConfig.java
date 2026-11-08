@@ -7,8 +7,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 /** Persistent client-side wardrobe settings. */
 public final class BaroxConfig {
@@ -36,16 +34,6 @@ public final class BaroxConfig {
     public int palette = 0;
     public int particleDensity = 1;
     public int hudPosition = 0;
-    public Map<String, Boolean> modules = new HashMap<>();
-
-    public boolean moduleEnabled(String id, boolean fallback) {
-        return modules == null ? fallback : modules.getOrDefault(id, fallback);
-    }
-
-    public void setModuleEnabled(String id, boolean enabled) {
-        if (modules == null) modules = new HashMap<>();
-        modules.put(id, enabled);
-    }
 
     public static BaroxConfig load() {
         try {
@@ -65,7 +53,6 @@ public final class BaroxConfig {
     }
 
     public void sanitize() {
-        if (modules == null) modules = new HashMap<>();
         wingStyle = clamp(wingStyle, 0, 9);
         capeStyle = clamp(capeStyle, 0, 3);
         petStyle = clamp(petStyle, 0, 7);
