@@ -36,5 +36,5 @@ jar {
 }
 
 tasks.named('remapJar') {
-    archiveFileName = 'BAROX-VS-v001.jar'
+    archiveFileName = 'BAROX-VS-v002.jar'
 }

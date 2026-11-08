@@ -31,21 +31,21 @@ jobs:
         run: |
           echo "Build output:"
           ls -lah build/libs
-          test -s build/libs/BAROX-VS-v001.jar
-          unzip -t build/libs/BAROX-VS-v001.jar
+          test -s build/libs/BAROX-VS-v002.jar
+          unzip -t build/libs/BAROX-VS-v002.jar
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: BAROX-VS-v001
-          path: build/libs/BAROX-VS-v001.jar
+          name: BAROX-VS-v002
+          path: build/libs/BAROX-VS-v002.jar
           if-no-files-found: error
       - name: Publish tagged release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v001
+          tag_name: v002
           target_commitish: main
-          name: BAROX VS v001
-          body: "BAROX VS v001 — Minecraft Java 1.21.4 Fabric. Client-side particle cosmetics."
-          files: build/libs/BAROX-VS-v001.jar
+          name: BAROX VS v002
+          body: "BAROX VS v002 — Minecraft Java 1.21.4 Fabric. Client-side particle cosmetics."
+          files: build/libs/BAROX-VS-v002.jar
           generate_release_notes: true
