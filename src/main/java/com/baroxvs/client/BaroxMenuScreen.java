@@ -42,6 +42,9 @@ public final class BaroxMenuScreen extends Screen {
         addCycle("Renk paleti", () -> CosmeticCatalog.PALETTES[config.palette], () -> config.palette = next(config.palette, CosmeticCatalog.PALETTES.length), left, top + row * 6, columnWidth);
         addCycle("Partikül yoğunluğu", () -> CosmeticCatalog.DENSITIES[config.particleDensity - 1], () -> config.particleDensity = config.particleDensity % 3 + 1, right, top + row * 6, columnWidth);
         addToggle("BAROX HUD", () -> config.showHud, v -> config.showHud = v, left, top + row * 7, columnWidth);
+        addToggle("Yörünge yıldızları", () -> config.showOrbitStars, v -> config.showOrbitStars = v, left, top + row * 8, columnWidth);
+        addToggle("Adım izi", () -> config.showFootsteps, v -> config.showFootsteps = v, right, top + row * 8, columnWidth);
+        addToggle("Baş halosu", () -> config.showHalo, v -> config.showHalo = v, left, top + row * 9, columnWidth);
         addCycle("HUD konumu", () -> CosmeticCatalog.HUD_POSITIONS[config.hudPosition], () -> config.hudPosition = next(config.hudPosition, CosmeticCatalog.HUD_POSITIONS.length), right, top + row * 7, columnWidth);
 
         addDrawableChild(ButtonWidget.builder(Text.literal("Varsayılanlara dön"), button -> {
@@ -54,16 +57,19 @@ public final class BaroxMenuScreen extends Screen {
             config.showSwordTrail = true;
             config.showJumpCrystal = true;
             config.showSkyMood = true;
+            config.showOrbitStars = true;
+            config.showFootsteps = true;
+            config.showHalo = true;
             config.wingStyle = config.capeStyle = config.petStyle = config.auraStyle = 0;
             config.skyStyle = config.palette = config.hudPosition = 0;
             config.particleDensity = 1;
             config.save();
             init();
-        }).dimensions(left, top + row * 8, columnWidth, 19).build());
+        }).dimensions(left, top + row * 10, columnWidth, 19).build());
         addDrawableChild(ButtonWidget.builder(Text.literal("Kaydet ve kapat"), button -> {
             config.save();
             close();
-        }).dimensions(right, top + row * 8, columnWidth, 19).build());
+        }).dimensions(right, top + row * 10, columnWidth, 19).build());
     }
 
     private void addToggle(String name, BooleanSupplier getter, Consumer<Boolean> setter, int x, int y, int w) {

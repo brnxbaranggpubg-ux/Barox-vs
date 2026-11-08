@@ -32,6 +32,9 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 jar {
-    archiveFileName = 'BAROX-VS-v001.jar'
     from('LICENSE') { rename { "${it}_${project.archives_base_name}" } }
+}
+
+tasks.named('remapJar') {
+    archiveFileName = 'BAROX-VS-v001.jar'
 }

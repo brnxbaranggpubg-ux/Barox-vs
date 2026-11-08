@@ -48,6 +48,10 @@ public final class CosmeticEngine {
         }
         if (config.showJumpCrystal && !player.isOnGround()) emitJumpCrystal(client, player);
         if (config.showSkyMood && tick % 5 == 0) emitSkyMood(client, player);
+        if (config.showOrbitStars) emitOrbitStars(client, player);
+        if (config.showFootsteps && player.isOnGround()
+                && player.getVelocity().horizontalLengthSquared() > 0.0025) emitFootsteps(client, player);
+        if (config.showHalo) emitHalo(client, player);
     }
 
     private void emitWings(MinecraftClient client, PlayerEntity p,
@@ -142,6 +146,37 @@ public final class CosmeticEngine {
             double z = p.getZ() + Math.sin(angle) * radius;
             double y = p.getY() + random.nextDouble(7.0, 13.0);
             spawn(client, sky, x, y, z, 0, 0.008, 0);
+        }
+    }
+
+    private void emitOrbitStars(MinecraftClient client, PlayerEntity p) {
+        ParticleEffect star = ParticleTypes.END_ROD;
+        double phase = tick * 0.09;
+        for (int i = 0; i < 3; i++) {
+            double a = phase + (Math.PI * 2.0 * i / 3.0);
+            double radius = 0.92;
+            spawn(client, star, p.getX() + Math.cos(a) * radius,
+                    p.getY() + 1.45 + Math.sin(phase * 1.4 + i) * 0.12,
+                    p.getZ() + Math.sin(a) * radius, 0, 0.012, 0);
+        }
+    }
+
+    private void emitFootsteps(MinecraftClient client, PlayerEntity p) {
+        if (tick % 5 != 0) return;
+        ParticleEffect trail = CosmeticCatalog.capeParticle(config.capeStyle);
+        double side = ThreadLocalRandom.current().nextBoolean() ? 0.16 : -0.16;
+        spawn(client, trail, p.getX() + side, p.getY() + 0.08, p.getZ(),
+                0, 0.018, 0);
+    }
+
+    private void emitHalo(MinecraftClient client, PlayerEntity p) {
+        int points = 8;
+        double phase = tick * 0.05;
+        for (int i = 0; i < points; i++) {
+            double a = Math.PI * 2.0 * i / points + phase;
+            spawn(client, ParticleTypes.END_ROD,
+                    p.getX() + Math.cos(a) * 0.28, p.getY() + 2.12,
+                    p.getZ() + Math.sin(a) * 0.28, 0, 0.004, 0);
         }
     }
 

@@ -27,6 +27,12 @@ jobs:
           gradle-version: '8.12'
       - name: Build and verify
         run: gradle clean build --no-daemon --stacktrace
+      - name: Verify packaged JAR
+        run: |
+          echo "Build output:"
+          ls -lah build/libs
+          test -s build/libs/BAROX-VS-v001.jar
+          unzip -t build/libs/BAROX-VS-v001.jar
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:

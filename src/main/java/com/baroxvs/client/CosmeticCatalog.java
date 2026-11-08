@@ -7,10 +7,10 @@ import net.minecraft.particle.ParticleTypes;
 public final class CosmeticCatalog {
     private CosmeticCatalog() {}
 
-    public static final String[] WINGS = {"Crystal", "Angel", "Demon", "Butterfly", "Void", "Dragon"};
+    public static final String[] WINGS = {"Crystal", "Angel", "Demon", "Butterfly", "Void", "Dragon", "Phoenix", "Frost", "Neon", "Celestial"};
     public static final String[] CAPES = {"Starlight", "Petal", "Soul", "Arcane"};
-    public static final String[] PETS = {"Fox", "Cat", "Bunny", "Dragonling", "Wisp", "Panda"};
-    public static final String[] AURAS = {"Stardust", "Solar", "Void", "Sakura"};
+    public static final String[] PETS = {"Fox", "Cat", "Bunny", "Dragonling", "Wisp", "Panda", "Bee", "Allay"};
+    public static final String[] AURAS = {"Stardust", "Solar", "Void", "Sakura", "Frost", "Inferno"};
     public static final String[] SKIES = {"Starfield", "Aurora", "Sunset", "Void", "Clouds"};
     public static final String[] PALETTES = {"Amethyst", "Azure", "Rose", "Emerald", "Solar", "Monochrome"};
     public static final String[] DENSITIES = {"Low", "Medium", "High"};
@@ -23,6 +23,10 @@ public final class CosmeticCatalog {
             case 3 -> ParticleTypes.CHERRY_LEAVES;
             case 4 -> ParticleTypes.PORTAL;
             case 5 -> ParticleTypes.FLAME;
+            case 6 -> ParticleTypes.TOTEM_OF_UNDYING;
+            case 7 -> ParticleTypes.SNOWFLAKE;
+            case 8 -> ParticleTypes.ELECTRIC_SPARK;
+            case 9 -> ParticleTypes.FIREWORK;
             default -> ParticleTypes.END_ROD;
         };
     }
@@ -43,6 +47,8 @@ public final class CosmeticCatalog {
             case 3 -> ParticleTypes.FLAME;
             case 4 -> ParticleTypes.END_ROD;
             case 5 -> ParticleTypes.CHERRY_LEAVES;
+            case 6 -> ParticleTypes.FIREWORK;
+            case 7 -> ParticleTypes.HAPPY_VILLAGER;
             default -> ParticleTypes.WAX_ON;
         };
     }
@@ -52,6 +58,8 @@ public final class CosmeticCatalog {
             case 1 -> ParticleTypes.FLAME;
             case 2 -> ParticleTypes.SOUL;
             case 3 -> ParticleTypes.CHERRY_LEAVES;
+            case 4 -> ParticleTypes.SNOWFLAKE;
+            case 5 -> ParticleTypes.SOUL_FIRE_FLAME;
             default -> ParticleTypes.ENCHANT;
         };
     }

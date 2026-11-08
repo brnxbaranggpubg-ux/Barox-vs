@@ -22,6 +22,9 @@ public final class BaroxConfig {
     public boolean showSwordTrail = true;
     public boolean showJumpCrystal = true;
     public boolean showSkyMood = true;
+    public boolean showOrbitStars = true;
+    public boolean showFootsteps = true;
+    public boolean showHalo = true;
 
     public int wingStyle = 0;
     public int capeStyle = 0;
@@ -50,10 +53,10 @@ public final class BaroxConfig {
     }
 
     public void sanitize() {
-        wingStyle = clamp(wingStyle, 0, 5);
+        wingStyle = clamp(wingStyle, 0, 9);
         capeStyle = clamp(capeStyle, 0, 3);
-        petStyle = clamp(petStyle, 0, 5);
-        auraStyle = clamp(auraStyle, 0, 3);
+        petStyle = clamp(petStyle, 0, 7);
+        auraStyle = clamp(auraStyle, 0, 5);
         skyStyle = clamp(skyStyle, 0, 4);
         palette = clamp(palette, 0, 5);
         particleDensity = clamp(particleDensity, 1, 3);

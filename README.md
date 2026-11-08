@@ -6,7 +6,8 @@ Client-side visual-cosmetics mod for Minecraft Java 1.21.4 + Fabric.
 - Wings: Crystal, Angel, Demon, Butterfly, Void and Dragon particle styles.
 - Cape trails and follower-pet particle mascots.
 - Aura rings, hand glow, sword trail and airborne Jump Crystal.
-- Ambient sky-mood particles, color palettes, particle density and HUD placement.
+- Ambient sky-mood particles, orbiting stars, footstep sparkles and a halo.
+- More wing, pet and aura particle styles; color palettes, particle density and HUD placement.
 - Settings saved in `config/baroxvs.json`.
 
 ## Controls
@@ -21,7 +22,7 @@ Requires Java 21 and internet access for Gradle dependencies.
 gradle clean build --no-daemon
 ```
 
-The release JAR is named `BAROX-VS-v001.jar` and is built by GitHub Actions.
+The remapped release JAR is named `BAROX-VS-v001.jar` and is built by GitHub Actions.
 
 ## Compatibility
 - Minecraft Java 1.21.4
