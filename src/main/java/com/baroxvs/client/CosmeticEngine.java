@@ -38,20 +38,28 @@ public final class CosmeticEngine {
         double backX = Math.sin(yaw);
         double backZ = -Math.cos(yaw);
 
-        if (config.showWings) emitWings(client, player, rightX, rightZ, backX, backZ);
-        if (config.showCape && tick % 2 == 0) emitCape(client, player, rightX, rightZ, backX, backZ);
-        if (config.showPet && tick % 2 == 0) emitPet(client, player, rightX, rightZ, backX, backZ);
-        if (config.showAura) emitAura(client, player);
-        if (config.showHandGlow) emitHand(client, player, rightX, rightZ, backX, backZ, ParticleTypes.END_ROD);
-        if (config.showSwordTrail && player.getMainHandStack().getItem() instanceof SwordItem) {
+        if (config.moduleEnabled("wings", config.showWings)) emitWings(client, player, rightX, rightZ, backX, backZ);
+        if (config.moduleEnabled("cape", config.showCape) && tick % 2 == 0) emitCape(client, player, rightX, rightZ, backX, backZ);
+        if (config.moduleEnabled("pet", config.showPet) && tick % 2 == 0) emitPet(client, player, rightX, rightZ, backX, backZ);
+        if (config.moduleEnabled("aura", config.showAura)) emitAura(client, player);
+        if (config.moduleEnabled("hand_glow", config.showHandGlow)) emitHand(client, player, rightX, rightZ, backX, backZ, ParticleTypes.END_ROD);
+        if (config.moduleEnabled("sword_trail", config.showSwordTrail) && player.getMainHandStack().getItem() instanceof SwordItem) {
             emitHand(client, player, rightX, rightZ, backX, backZ, CosmeticCatalog.wingParticle(config.wingStyle));
         }
-        if (config.showJumpCrystal && !player.isOnGround()) emitJumpCrystal(client, player);
-        if (config.showSkyMood && tick % 5 == 0) emitSkyMood(client, player);
-        if (config.showOrbitStars) emitOrbitStars(client, player);
-        if (config.showFootsteps && player.isOnGround()
+        if (config.moduleEnabled("jump_crystal", config.showJumpCrystal) && !player.isOnGround()) emitJumpCrystal(client, player);
+        if (config.moduleEnabled("sky_mood", config.showSkyMood) && tick % 5 == 0) emitSkyMood(client, player);
+        if (config.moduleEnabled("orbit_stars", config.showOrbitStars)) emitOrbitStars(client, player);
+        if (config.moduleEnabled("footsteps", config.showFootsteps) && player.isOnGround()
                 && player.getVelocity().horizontalLengthSquared() > 0.0025) emitFootsteps(client, player);
-        if (config.showHalo) emitHalo(client, player);
+        if (config.moduleEnabled("halo", config.showHalo)) emitHalo(client, player);
+        if (config.moduleEnabled("sparkle_trail", false) && tick % 2 == 0)
+            spawn(client, ParticleTypes.END_ROD, player.getX(), player.getY() + 0.55, player.getZ(), 0, 0.018, 0);
+        if (config.moduleEnabled("heart_trail", false) && tick % 4 == 0)
+            spawn(client, ParticleTypes.HEART, player.getX(), player.getY() + 1.05, player.getZ(), 0, 0.025, 0);
+        if (config.moduleEnabled("bubble_trail", false) && tick % 3 == 0)
+            spawn(client, ParticleTypes.BUBBLE, player.getX(), player.getY() + 0.25, player.getZ(), 0, 0.035, 0);
+        if (config.moduleEnabled("crown_sparkles", false)) emitCrown(client, player);
+        if (config.moduleEnabled("shoulder_wisp", false)) emitShoulderWisp(client, player, rightX, rightZ);
     }
 
     private void emitWings(MinecraftClient client, PlayerEntity p,
@@ -167,6 +175,23 @@ public final class CosmeticEngine {
         double side = ThreadLocalRandom.current().nextBoolean() ? 0.16 : -0.16;
         spawn(client, trail, p.getX() + side, p.getY() + 0.08, p.getZ(),
                 0, 0.018, 0);
+    }
+
+    private void emitCrown(MinecraftClient client, PlayerEntity p) {
+        if (tick % 2 != 0) return;
+        for (int i = 0; i < 5; i++) {
+            double a = Math.PI * (i / 4.0);
+            spawn(client, ParticleTypes.END_ROD, p.getX() + Math.cos(a) * 0.24,
+                    p.getY() + 2.02 + (i % 2) * 0.06, p.getZ() + Math.sin(a) * 0.24,
+                    0, 0.008, 0);
+        }
+    }
+
+    private void emitShoulderWisp(MinecraftClient client, PlayerEntity p, double rx, double rz) {
+        double phase = tick * 0.08;
+        spawn(client, ParticleTypes.SOUL, p.getX() + rx * 0.34 + Math.cos(phase) * 0.06,
+                p.getY() + 1.48 + Math.sin(phase * 1.7) * 0.07,
+                p.getZ() + rz * 0.34, 0, 0.012, 0);
     }
 
     private void emitHalo(MinecraftClient client, PlayerEntity p) {
