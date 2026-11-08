@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "baroxvs",
+  "version": "${version}",
+  "name": "BAROX VS",
+  "description": "A client-side visual cosmetics wardrobe for Minecraft 1.21.4 Fabric.",
+  "authors": ["BAROX VS Team"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.baroxvs.client.BaroxVsClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
