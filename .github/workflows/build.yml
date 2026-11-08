@@ -40,8 +40,12 @@ jobs:
           path: build/libs/BAROX-VS-v001.jar
           if-no-files-found: error
       - name: Publish tagged release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v001
+          target_commitish: main
+          name: BAROX VS v001
+          body: "BAROX VS v001 — Minecraft Java 1.21.4 Fabric. Client-side particle cosmetics."
           files: build/libs/BAROX-VS-v001.jar
           generate_release_notes: true
