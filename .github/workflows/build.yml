@@ -1,45 +1,64 @@
-name: Diagnose BAROX VS v004 source chunks
+name: Build BAROX VS v004
 
 on:
   push:
     branches: [ main ]
+  pull_request:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  inspect:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Check each encoded source chunk
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Restore and verify v004 source archive
         shell: bash
         run: |
-          mkdir -p "$RUNNER_TEMP/chunks"
-          for f in source-chunks/part-*.b64; do
-            name=$(basename "$f")
-            if [[ "$name" == "part-001.b64" ]]; then
-              head -c 7000 "$f" > "$RUNNER_TEMP/chunks/$name"
-            else
-              cp "$f" "$RUNNER_TEMP/chunks/$name"
-            fi
-          done
-          cat > "$RUNNER_TEMP/expected.txt" <<'EOF'
-          920aad144bae09acf559079b59b171a0770bacabc08a8fccbd72e45bc244074e  part-001.b64
-          4a2b57a43b2d0bd7742935ef4bd43ec3851d36cb86da02a13f2310388a6d32e1  part-002.b64
-          c797409a947a45af9c41686ca86d3a0102db4f4580ba538dfc0fcb99b502041d  part-003.b64
-          d15e0ba4551b0ff6d79cc93b2ed1079abb8923cc98f1929c9d84bb64be88955a  part-004.b64
-          9ed91a7b2366c4c5489adf2d1eb953e72650b26cb4c25911a8084fb13cbc7585  part-005.b64
-          0fc0cd6afb21cf2d1da0729b62df57df5cd48663dcf361a47041dbfab787e818  part-006.b64
-          c3517200e7e6a2e3b0dad06e50605c379ed61e1e7d916f62e6b190b75f627e69  part-007.b64
-          02292df199b291d168afbb2e6c95c611a21e1298ba9d9a1aec0678e38b4b1351  part-008.b64
-          3382e93a0b369749d398c01b660a60ff54c20d1b608abc5fd9c86840696d3f38  part-009.b64
-          072f7bd3177ceb9bf328670e43cc8afdce3a7abdeb375246468c550081c7e6a7  part-010.b64
-          64f76ee74ee3f09d4359d1e82f4b83500a05ccd555b001773b1d29bebdf32e85  part-011.b64
-          74521ab5430000bd2ef416955ab3508fa4c6e2f36cf6f5998c7d16ecd9790e4d  part-012.b64
-          EOF
-          cd "$RUNNER_TEMP/chunks"
-          sha256sum --check "$RUNNER_TEMP/expected.txt" || true
-          echo "Actual chunk hashes:"
-          sha256sum part-*.b64
+          {
+            for f in source-chunks/part-*.b64; do
+              if [[ "$f" == "source-chunks/part-001.b64" ]]; then
+                head -c 7000 "$f"
+              else
+                cat "$f"
+              fi
+            done
+          } | base64 --decode > "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz"
+          echo "df516f07f4ac0145f85b798e754991c6fb707b487d1f12be5d0ac88abb3af102  $RUNNER_TEMP/BAROX-VS-v004-source.tar.xz" | sha256sum --check -
+          xz --test "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz"
+          rm -rf src
+          tar -xJf "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz" -C .
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.12'
+      - name: Build and verify
+        run: |
+          gradle clean build --no-daemon --stacktrace
+          test -s build/libs/BAROX-VS-v004.jar
+          unzip -t build/libs/BAROX-VS-v004.jar
+          unzip -p build/libs/BAROX-VS-v004.jar fabric.mod.json
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BAROX-VS-v004
+          path: build/libs/BAROX-VS-v004.jar
+          if-no-files-found: error
+      - name: Publish v004 release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v004
+          target_commitish: main
+          name: BAROX VS v004
+          body: "BAROX VS v004 — Minecraft Java 1.21.4 Fabric client-side cosmetics."
+          files: build/libs/BAROX-VS-v004.jar
+          generate_release_notes: true
