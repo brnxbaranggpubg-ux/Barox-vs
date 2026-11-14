@@ -1,9 +1,8 @@
-name: Build BAROX VS
+name: Build BAROX VS v004
 
 on:
   push:
     branches: [ main ]
-    tags: [ 'v*' ]
   pull_request:
   workflow_dispatch:
 
@@ -21,31 +20,34 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - name: Restore v004 source archive
+        run: |
+          cat source-chunks/part-*.b64 | base64 --decode > "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz"
+          echo "df516f07f4ac0145f85b798e754991c6fb707b487d1f12be5d0ac88abb3af102  $RUNNER_TEMP/BAROX-VS-v004-source.tar.xz" | sha256sum --check -
+          rm -rf src
+          tar -xJf "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz" -C .
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.12'
       - name: Build and verify
-        run: gradle clean build --no-daemon --stacktrace
-      - name: Verify packaged JAR
         run: |
-          echo "Build output:"
-          ls -lah build/libs
-          test -s build/libs/BAROX-VS-v002.jar
-          unzip -t build/libs/BAROX-VS-v002.jar
+          gradle clean build --no-daemon --stacktrace
+          test -s build/libs/BAROX-VS-v004.jar
+          unzip -t build/libs/BAROX-VS-v004.jar
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: BAROX-VS-v002
-          path: build/libs/BAROX-VS-v002.jar
+          name: BAROX-VS-v004
+          path: build/libs/BAROX-VS-v004.jar
           if-no-files-found: error
-      - name: Publish tagged release
+      - name: Publish v004 release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v002
+          tag_name: v004
           target_commitish: main
-          name: BAROX VS v002
-          body: "BAROX VS v002 — Minecraft Java 1.21.4 Fabric. Client-side particle cosmetics."
-          files: build/libs/BAROX-VS-v002.jar
+          name: BAROX VS v004
+          body: "BAROX VS v004 — Minecraft Java 1.21.4 Fabric client-side cosmetics."
+          files: build/libs/BAROX-VS-v004.jar
           generate_release_notes: true
