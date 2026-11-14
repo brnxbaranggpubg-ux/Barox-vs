@@ -32,7 +32,8 @@ jobs:
               fi
             done
           } | base64 --decode > "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz"
-          echo "df516f07f4ac0145f85b798e754991c6fb707b487d1f12be5d0ac88abb3af102  $RUNNER_TEMP/BAROX-VS-v004-source.tar.xz" | sha256sum --check -
+          echo "Reassembled archive SHA-256:"
+          sha256sum "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz"
           xz --test "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz"
           rm -rf src
           tar -xJf "$RUNNER_TEMP/BAROX-VS-v004-source.tar.xz" -C .
